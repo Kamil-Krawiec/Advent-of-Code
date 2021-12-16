@@ -1,4 +1,4 @@
-package com.company.day1;
+package com.company.day01;
 
 import java.io.*;
 import java.util.ArrayList;
