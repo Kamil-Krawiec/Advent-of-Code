@@ -3,9 +3,9 @@ package com.company.day04;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
 
-public class Day4 {
+public class Day4B {
 
     public String[] bingoNumbers;//string tab for numbers
     public ArrayList<BingoTableB> bingoTables;//A hashMap for Tables and boolean flag of change
@@ -39,22 +39,33 @@ public class Day4 {
         }
     }
 
-    public int startThelottery() {
+    public void startThelottery() {
         for (int i = 0; i < bingoNumbers.length; i++) {
-            int number = Integer.parseInt(bingoNumbers[i]);
-            for (BingoTableB bt : bingoTables) {
 
+            int number = Integer.parseInt(bingoNumbers[i]);
+
+            ArrayList<BingoTableB> tablesToRemove = new ArrayList<>();
+
+            for (BingoTableB bt : bingoTables) {
                 int index;
 
                 if ((index = bt.getBingoTable().indexOf(number)) != -1) {
                     bt.changeStateOfIndex(index);
-                    if (i > 3 && checkForWinner(bt)) {
-                        return countTheWinner(number, bt);
+                    if (i > 3 && checkForWinner(bt) && bingoTables.size()!=1) {
+                        tablesToRemove.add(bt);
                     }
                 }
+
+            }
+
+            for(BingoTableB btB: tablesToRemove){
+                bingoTables.remove(btB);
+            }
+            if(checkForWinner(bingoTables.get(0))&&bingoTables.size()==1){
+                System.out.println(countTheWinner(number,bingoTables.get(0)));
+                return;
             }
         }
-        return -1;
     }
 
     private boolean checkForWinner(BingoTableB bt) {
@@ -68,12 +79,12 @@ public class Day4 {
 
 }
 
-class BingoTable {
+class BingoTableB {
     private ArrayList<Integer> bingoTable;
 
     private ArrayList<ArrayList<Boolean>> bingoState;//tab for state of bingo numbers
 
-    public BingoTable(String numbers) {
+    public BingoTableB(String numbers) {
         String[] table = numbers.split("\\s+");
         bingoTable = new ArrayList();
 
